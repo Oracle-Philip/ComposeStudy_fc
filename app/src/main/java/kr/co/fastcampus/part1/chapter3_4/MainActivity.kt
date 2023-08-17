@@ -1,72 +1,77 @@
-package kr.co.fastcampus.part1.chapter3_6
+package kr.co.fastcampus.part1.chapter3_7
 
+import android.graphics.Paint.Align
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.height
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import kr.co.fastcampus.part1.chapter3_4.ui.theme.BoxTheme
-/**
- * Box 목적?
- * Box 자체를 만들기 위한 것
- * 기존 FrameLayout과 같이 중첩을 위해서?
- */
+import kr.co.fastcampus.part1.chapter3_4.ui.theme.RowTheme
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            BoxTheme {
-                BoxEx()
+            RowTheme {
+                RowEx()
             }
         }
     }
 }
 
+/**
+ * Row는 컴포넌트를 가로로 이어서 배치한다.
+ * modifier width를 정하지 않으면 컨텐츠 사이즈만큼 적용된다
+ * Row는 기본적으로 vertical alignment 적용
+ */
 @Composable
-fun BoxEx() {
-//    Box(modifier = Modifier.size(100.dp)) {
-    Box() {
-//        Text(text = "Hello World", modifier = Modifier.align(Alignment.BottomEnd))
-//        Text(text = "Jetpack", modifier = Modifier.align(Alignment.CenterEnd))
-//        Text(text = "Compose", modifier = Modifier.align(Alignment.TopStart))
-        Box(
-            modifier = Modifier
-                //.size(70.dp)
-                //matchParentSize()도 있음
-                .fillMaxSize()
-                .background(Color.Blue, shape = CircleShape)
-                .align(Alignment.TopStart),
+fun RowEx() {
+    Row(
+        modifier = Modifier.height(40.dp),
+        verticalAlignment = Alignment.Top
+    ) {
+        Text(
+            text = "첫 번째!",
+            modifier = Modifier.align(Alignment.Top),
         )
-        Box(
-            modifier = Modifier
-                .size(70.dp)
-                .background(Color.Red, shape = CircleShape)
-                .align(Alignment.Center),
+        Text(
+            text = "두 번째!",
+            modifier = Modifier.align(Alignment.CenterVertically)
+        )
+        Text(
+            text = "세 번째!",
+            modifier = Modifier.align(Alignment.Bottom)
         )
     }
-    // 스텝 1: Text 두개를 Box 안에 배치해봅시다.
 
-    // 스텝 2: 2개의 Box를 Box 안에 배치하고 사이즈를 70dp, 색상을 각기 다르게 해봅시다.
+    // 스텝 1: 각 Text의 modifier에 align을 설정합시다.
+    // Alignment.Top, CenterVertically, Bottom을 지정해봅시다.
 
-    // 스텝 3: 부모 Box에 modifier 설정을 제거해서 콘텐트 사이즈만큼 보여주게 합시다.
-    // 그리고 첫번째 자식 Box의 사이즈를 matchParentSize()로 설정해봅시다.
-    // 다음에는 fillMaxSize()로 설정해봅시다.
+    // 스텝 2: Row에 verticalAlignment를 설정해봅시다.
+    // Text에 align을 사용할 때와 쓰이는 값이 같습니다.
+
+    // 스텝 3: Row의 width를 200dp 정도로 설정합시다.
+    // Row에 horizontalArrangement에 Arrangement.Center를
+    // 설정해봅시다. Start, End, SpaceAround, SpaceBetween
+    // SpaceEvenly를 설정해봅시다.
+
+    // 스텝 4: horizontalArrangement를 제거하고 각 Text에
+    // Modifier.weight를 설정합시다. 각 항목의 weight 값을 바꾸어
+    // 보세요.
+
+    // 스텝 5: Text 대신 Icon을 하나 넣어봅시다.
 }
 
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
-    BoxTheme {
-        BoxEx()
+    RowTheme {
+        RowEx()
     }
 }

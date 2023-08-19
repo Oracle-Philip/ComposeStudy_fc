@@ -1,4 +1,4 @@
-package kr.co.fastcampus.part1.chapter3_4.ui.theme
+package kr.co.fastcampus.part1.chapter3_9.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

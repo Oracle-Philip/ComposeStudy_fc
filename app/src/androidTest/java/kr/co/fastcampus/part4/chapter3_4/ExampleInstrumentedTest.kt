@@ -1,4 +1,4 @@
-package kr.co.fastcampus.part1.chapter3_4
+package kr.co.fastcampus.part1.chapter3_9
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

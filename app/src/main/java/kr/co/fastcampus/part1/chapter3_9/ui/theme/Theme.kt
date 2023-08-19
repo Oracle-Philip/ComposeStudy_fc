@@ -1,4 +1,4 @@
-package kr.co.fastcampus.part1.chapter3_4.ui.theme
+package kr.co.fastcampus.part1.chapter3_9.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
@@ -28,7 +28,10 @@ private val LightColorPalette = lightColors(
 )
 
 @Composable
-fun ColumnTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
+fun BoxWithConstraintsTheme(
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit
+) {
     val colors = if (darkTheme) {
         DarkColorPalette
     } else {

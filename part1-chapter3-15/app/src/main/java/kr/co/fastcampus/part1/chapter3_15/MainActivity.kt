@@ -5,9 +5,17 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -32,6 +40,43 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun TopBarEx(name: String) {
     Column {
+        TopAppBar(
+            title = {
+                Text("TopAppBar")
+            },
+            navigationIcon = {
+                IconButton(
+                    onClick = {}){
+                    Icon(
+                        imageVector = Icons.Filled.ArrowBack,
+                        contentDescription = "업 네비게이션"
+                    )
+                }
+            },
+            actions = {
+                IconButton(
+                    onClick = {}){
+                    Icon(
+                        imageVector = Icons.Filled.Search,
+                        contentDescription = "검색"
+                    )
+                }
+                IconButton(
+                    onClick = {}){
+                    Icon(
+                        imageVector = Icons.Filled.Settings,
+                        contentDescription = "검색"
+                    )
+                }
+                IconButton(
+                    onClick = {}){
+                    Icon(
+                        imageVector = Icons.Filled.AccountBox,
+                        contentDescription = "검색"
+                    )
+                }
+            }
+        )
         // 스텝 1: TopAppBar를 만들고 title 항목을 채워봅시다.
 
         // 스텝 2: navigationIcon 파라미터를 채워봅시다.
@@ -43,6 +88,42 @@ fun TopBarEx(name: String) {
         // Icons.Filled의 여러 아이콘을 이용해봅시다.
 
         // 스텝 4: TopAppBar content 파라미터 버전을 만들어봅시다.
+        TopAppBar {
+            IconButton(onClick = {}) {
+                Icon(
+                    imageVector = Icons.Filled.ArrowBack,
+                    contentDescription = "업 네비게이션"
+                )
+            }
+            Text(
+                text = "TopAppBar",
+                modifier = Modifier.
+                        weight(1f)
+            )
+
+            IconButton(
+                onClick = {}) {
+                Icon(
+                    imageVector = Icons.Filled.Search,
+                    contentDescription = "검색"
+                )
+            }
+            IconButton(
+                onClick = {}) {
+                Icon(
+                    imageVector = Icons.Filled.Settings,
+                    contentDescription = "검색"
+                )
+            }
+            IconButton(
+                onClick = {}) {
+                Icon(
+                    imageVector = Icons.Filled.AccountBox,
+                    contentDescription = "검색"
+                )
+            }
+        }
+
 
         Text(text = "Hello $name!")
     }

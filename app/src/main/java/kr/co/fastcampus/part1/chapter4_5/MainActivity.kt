@@ -47,7 +47,7 @@ fun ConstraintLayoutEx() {
                 .size(40.dp)
                 .background(Color.Red)
                 .constrainAs(redBox) {
-                    top.linkTo(parent.top, margin = 50.dp)
+                    start.linkTo(parent.start, margin = 50.dp)
                 }
         )
 
@@ -56,7 +56,7 @@ fun ConstraintLayoutEx() {
                 .size(40.dp)
                 .background(Color.Yellow)
                 .constrainAs(yellowBox) {
-                    top.linkTo(parent.top, margin = 32.dp)
+                    start.linkTo(parent.start, margin = 32.dp)
                 }
         )
 
@@ -65,7 +65,7 @@ fun ConstraintLayoutEx() {
                 .size(40.dp)
                 .background(Color.Magenta)
                 .constrainAs(magentaBox) {
-                    top.linkTo(parent.top, margin = 20.dp)
+                    start.linkTo(parent.start, margin = 200.dp)
                 }
         )
 
@@ -83,7 +83,7 @@ fun ConstraintLayoutEx() {
          * packed 뭉쳐있게
          * spreadInsdie
          */
-        createHorizontalChain(redBox, yellowBox, magentaBox, chainStyle = ChainStyle.SpreadInside)
+        createVerticalChain(redBox, yellowBox, magentaBox, chainStyle = ChainStyle.SpreadInside)
 
         // 단계 3: 세 박스의 top을 parent.top에 연결하고 각각
         // 다른 마진을 줍시다.
@@ -94,14 +94,16 @@ fun ConstraintLayoutEx() {
         /**
          * Barrier는 Top, bottom, start, end가 있다.
          */
-        val barrier = createBottomBarrier(redBox, yellowBox, magentaBox)
+        val barrier = createEndBarrier(redBox, yellowBox, magentaBox)
 
         // 단계 5: `Text` 하나 만들고 top을 박스 베리어로 지정합니다.
         Text(
             text = "barrier 밑에 가게... barrier.. barrier.. barrier..",
             modifier = Modifier.
+                size(100.dp).
                 constrainAs(text){
-                    top.linkTo(barrier)
+                    start.linkTo(barrier)
+                    bottom.linkTo(magentaBox.bottom)
                 },
         )
         // 단계 6: 체이닝 방향이나 베리어 방향을 바꾸어 보며 다양하게 테스트해봅시다.

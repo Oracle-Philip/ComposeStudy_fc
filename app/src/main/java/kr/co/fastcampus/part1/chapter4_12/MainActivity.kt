@@ -47,6 +47,16 @@ fun BottomAppBarEx() {
     ): ScaffoldState = remember {
         ScaffoldState(drawerState, snackbarHostState)
     }*/
+
+    /**
+     * !중요!
+     * Composable 함수인 BottomAppBarEx()에서 LaunchedEffect 외에
+     * Scaffold와 밖에 있는 code들을 channel로 연결하여
+     * 호출해 갱신하게 만드는 방법도 있다!
+     * 예를 들어 Button(onClick = {channel.send()}) 시에 밖에서 channel.notifiy를 하여
+     * 갱신하는 방법 등이 있다!
+     */
+
     val scaffoldState = rememberScaffoldState()
     val coroutineScope = rememberCoroutineScope()
 
@@ -58,6 +68,17 @@ fun BottomAppBarEx() {
             BottomAppBar(
 
             ) {
+//                LaunchedEffect(
+//                    key1 = counter,
+//                    block = {
+//                        coroutineScope.launch {
+//                            scaffoldState.snackbarHostState.showSnackbar(
+//                                message = "bottomBar Click",
+//                                actionLabel = "",
+//                                duration = SnackbarDuration.Short
+//                            )
+//                        }
+//                    })
                 Text(
                     text = "Hello",
                     modifier = Modifier
@@ -76,6 +97,53 @@ fun BottomAppBarEx() {
 //                            }
                         }
                 )
+                Button(
+                    onClick = {
+                            coroutineScope.launch {
+                                /**
+                                 * showSnackbar의 기본값은 actionLabel, duration이 주어진다.
+                                 * message만 세팅해도 된다.
+                                 */
+                                scaffoldState.snackbarHostState.showSnackbar(
+                                    message = "bottomBar Click",
+                                    /*actionLabel = "",
+                                    duration = SnackbarDuration.Short*/
+                                )
+                            }
+                    }
+                ){
+                    Text(
+                        text = "인사하기"
+                    )
+                }
+                Button(
+                    onClick = {
+                        counter += 1
+                        coroutineScope.launch {
+                            scaffoldState.snackbarHostState.showSnackbar(
+                                message = "${counter}입니다.",
+                            )
+                        }
+                    }
+                ){
+                    Text(
+                        text = "더하기"
+                    )
+                }
+                Button(
+                    onClick = {
+                        coroutineScope.launch {
+                            counter -= 1
+                            scaffoldState.snackbarHostState.showSnackbar(
+                                message = "${counter}입니다.",
+                            )
+                        }
+                    }
+                ){
+                    Text(
+                        text = "빼기"
+                    )
+                }
                /* {
                     //@Composable invocations can only happen from the context of a @Composable function
                     LaunchedEffect(
@@ -142,26 +210,32 @@ fun BottomAppBarEx() {
             }
         }
     ){
-        Text(
-            text = "Counter $counter",
-            fontSize = 16.sp
-        )
+        Box(
+            /**
+             * Box modifier를 fillMaxSize()로 하지 않으면
+             * Text()가 가운데 정렬 안된다.
+             */
+            modifier = Modifier.fillMaxSize()
+        ){
+            Text(
+                text = "Counter $counter",
+                fontSize = 16.sp,
+                modifier = Modifier.align(Alignment.Center)
+            )
+        }
 
-        LaunchedEffect(
+        /*LaunchedEffect(
             key1 = counter,
             block = {
                 coroutineScope.launch {
-                    /**
+                    *//**
                      * showSnackbar의 기본값은 actionLabel, duration이 주어진다.
                      * message만 세팅해도 된다.
-                     */
+                     *//*
                     scaffoldState.snackbarHostState.showSnackbar(
                         message = "bottomBar Click",
-                        /*actionLabel = "",
-                        duration = SnackbarDuration.Short*/
-                    )
-                }
-            })
+                        *//*actionLabel = "",
+                        duration = SnackbarDuration.Short*//* */
     }
 
     // 단계 1: `Scaffold`에 `scaffoldState`를 설정합니다.

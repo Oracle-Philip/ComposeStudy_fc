@@ -3,6 +3,7 @@ package kr.co.fastcampus.part1.chapter4_12
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -34,6 +35,18 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun BottomAppBarEx() {
+    /**
+     * 기본적으로 remember가 붙어있는 함수들은...
+     * remember를 호출하는 Utility이다..
+     */
+
+/*    @Composable
+    fun rememberScaffoldState(
+        drawerState: DrawerState = rememberDrawerState(DrawerValue.Closed),
+        snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
+    ): ScaffoldState = remember {
+        ScaffoldState(drawerState, snackbarHostState)
+    }*/
     val scaffoldState = rememberScaffoldState()
     val coroutineScope = rememberCoroutineScope()
 
@@ -45,7 +58,43 @@ fun BottomAppBarEx() {
             BottomAppBar(
 
             ) {
-                Row(
+                Text(
+                    text = "Hello",
+                    modifier = Modifier
+                        .clickable {
+                            counter += 1
+//                            coroutineScope.launch {
+//                                /**
+//                                 * showSnackbar의 기본값은 actionLabel, duration이 주어진다.
+//                                 * message만 세팅해도 된다.
+//                                 */
+//                                scaffoldState.snackbarHostState.showSnackbar(
+//                                    message = "bottomBar Click",
+//                                    /*actionLabel = "",
+//                                    duration = SnackbarDuration.Short*/
+//                                )
+//                            }
+                        }
+                )
+               /* {
+                    //@Composable invocations can only happen from the context of a @Composable function
+                    LaunchedEffect(
+                        key1 = counter,
+                        block = {
+                            coroutineScope.launch {
+                                *//**
+                                 * showSnackbar의 기본값은 actionLabel, duration이 주어진다.
+                                 * message만 세팅해도 된다.
+                                 *//*
+                                scaffoldState.snackbarHostState.showSnackbar(
+                                    message = "bottomBar Click",
+                                    *//*actionLabel = "",
+                                    duration = SnackbarDuration.Short*//*
+                                )
+                            }
+                        })
+                }*/
+                /*Row(
 
                 ){
 //                    Text(
@@ -89,7 +138,7 @@ fun BottomAppBarEx() {
                             text = "더하기"
                         )
                     }
-                }
+                }*/
             }
         }
     ){
@@ -97,6 +146,22 @@ fun BottomAppBarEx() {
             text = "Counter $counter",
             fontSize = 16.sp
         )
+
+        LaunchedEffect(
+            key1 = counter,
+            block = {
+                coroutineScope.launch {
+                    /**
+                     * showSnackbar의 기본값은 actionLabel, duration이 주어진다.
+                     * message만 세팅해도 된다.
+                     */
+                    scaffoldState.snackbarHostState.showSnackbar(
+                        message = "bottomBar Click",
+                        /*actionLabel = "",
+                        duration = SnackbarDuration.Short*/
+                    )
+                }
+            })
     }
 
     // 단계 1: `Scaffold`에 `scaffoldState`를 설정합니다.
@@ -109,6 +174,25 @@ fun BottomAppBarEx() {
     // 만듭시다. `Scaffold`의 `content`에 `Text`를 넣어 카운터를 출력하게
     // 합시다.
 }
+
+/*@Composable
+fun showSnackBar(){
+    LaunchedEffect(
+        key1 = counter,
+        block = {
+            coroutineScope.launch {
+                *//**
+                 * showSnackbar의 기본값은 actionLabel, duration이 주어진다.
+                 * message만 세팅해도 된다.
+                 *//*
+                scaffoldState.snackbarHostState.showSnackbar(
+                    message = "bottomBar Click",
+                    *//*actionLabel = "",
+                    duration = SnackbarDuration.Short*//*
+                )
+            }
+        })
+}*/
 
 @Preview(showBackground = true)
 @Composable

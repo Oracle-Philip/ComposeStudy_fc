@@ -6,11 +6,9 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -34,19 +32,58 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun PyeongToSquareMeter() {
+
+    /**
+     * remember는 Compasable을 가져오기 위해서 cache를 사용한다.
+     * 그 cache가 configuration이 바뀔때는 유지되지 않는다.
+     * 즉, lotation 때문에 바뀔 수 있는데, 그렇다고 모든 값을 rememberSaveable로 하는건
+     * 저장 공간상 좋은 방법은 아니다
+     */
+
+/*    @Composable
+    inline fun <T> remember(calculation: @DisallowComposableCalls () -> T): T =
+        currentComposer.cache(false, calculation)*/
+
     //구조분해방식..
 /*    var (pyeong, setValue) = remember {
         mutableStateOf("23")
     }*/
 
     //by 위임방식
-    var pyeong by remember {
+    var pyeong by rememberSaveable {
         mutableStateOf("23")
     }
 
-    var (squaremeter, setSquaremeter) = remember {
+    var squaremeterby by rememberSaveable {
         mutableStateOf((23 * 3.306).toString())
     }
+
+//    var (squaremeter, setSquaremeter) = rememberSaveable {
+//        mutableStateOf((23 * 3.306).toString())
+//    }
+
+
+/*    *//**
+     * Creates a [ScaffoldState] with the default animation clock and memoizes it.
+     *
+     * @param drawerState the drawer state
+     * @param snackbarHostState instance of [SnackbarHostState] to be used to show [Snackbar]s
+     * inside of the [Scaffold]
+     *//*
+    @Composable
+    fun rememberScaffoldState(
+        drawerState: DrawerState = rememberDrawerState(DrawerValue.Closed),
+        snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
+    ): ScaffoldState = remember {
+        ScaffoldState(drawerState, snackbarHostState)
+    }*/
+
+    /**
+     * 참고
+     * rememberScaffoldState()는 내부에서 remember를 처리하고 있다.
+     */
+
+    //rememberScaffoldState()
 
     // 단계 1: remember를 이용해 상태를 만들고 평 값을 입력하면
     // 제곱미터가 출력되도록 화면을 구성하시오.
@@ -58,13 +95,15 @@ fun PyeongToSquareMeter() {
                 //setValue.toString()
                             pyeong = it
             },
-//            label = {
-//                Text("평")
-//            }
+            label = {
+                Text("평")
+            }
         )
         OutlinedTextField(
-            value = "",
-            onValueChange = {},
+            value = squaremeterby,
+            onValueChange = {
+                squaremeterby = it
+            },
             label = {
                 Text("제곱미터")
             }

@@ -36,16 +36,73 @@ class MainActivity : ComponentActivity() {
 fun TopLevel() {
     val (text, setText) = remember { mutableStateOf("") }
     val toDoList = remember { mutableStateListOf<ToDoData>() }
+    //MutableStateList가 추가, 삭제, 변경되었을 때만 UI가 갱신된다.
+    //항목 하나의 값을 바꾸는 것보다 항목 자체를 바꾸는게 더 좋다.
+
+    val onSubmit : (String) -> Unit = { text ->
+        val key = (toDoList.lastOrNull()?.key ?: 0) + 1
+        toDoList.add(ToDoData(key, text))
+        setText("")
+    }
 
     // 단계 4: `onSubmit`, `onEdit`, `onToggle`, `onDelete`를
     // 만들어 `ToDo`에 연결합니다.
 
+    val onToggle : (Int, Boolean) -> Unit = { key, checked ->
+        val i = toDoList.indexOfFirst { it.key == key }
+        //toDoList.get(i).done = checked
+        toDoList[i] = toDoList[i].copy ( done = checked )
+    }
+
+    val onDelete : (Int) -> Unit = { key ->
+        val i = toDoList.indexOfFirst { it.key == key }
+        toDoList.removeAt(i)
+    }
+
+    //ToDo객체의 필드를 불변으로 바꾼 이유는
+    //필드값을 바꾼다고 해서 Ui가 바뀌지 않기 때문이다.
+    //꼼수로 ToDo의 일부 필드 타입을 State형으로 바꾸면 되지만..
+    //좋은 방법이 아니다..
+    val onEdit : (Int, String) -> Unit = { key, editText ->
+        val i = toDoList.indexOfFirst { it.key == key }
+        toDoList[i] = toDoList[i].copy( text = editText)
+    }
 
     Scaffold {
         Column {
-            ToDoInput(text, setText, {})
+            ToDoInput(
+                text = text,
+                onTextChange = setText,
+                onSubmit = onSubmit
+            )
             // 단계 3: `LazyColumn`으로 `toDoList`를 표시합시다.
             // `key`를 `toDoData`의 `key`를 사용합니다.
+
+
+            /**
+             * !중요 <효과적인 렌더링을 위해서>
+             * LazyColumn의 퍼포먼스를 위해서...
+             * key를 설정해주자...
+             * JetPack Compose는 혼란을 겪을 수 있다.
+             * 어떤 항목이 재사용 가능한지 아닌지를 알 수 없어서..
+             * 그래서 key를 세팅해주자.. ==> key가 같으면 재사용 할 수 있다고 알려주는 것이다..
+             */
+            LazyColumn {
+                items(toDoList, key = {
+                    //it 즉 ToDoData의 key를 가지고 렌더링을 위한 key로 사용한다..
+                    it.key
+                }){toDoData ->
+                    //Text(toDoData.text)
+
+                    //되도록 keyword Parameter로 바꾸자..
+                    ToDo(
+                        toDoData = toDoData,
+                        onToggle = onToggle,
+                        onDelete = onDelete,
+                        onEdit = onEdit
+                    )
+                }
+            }
         }
     }
 }
@@ -143,7 +200,8 @@ fun ToDo(
             when (it){
                 false -> {
                     Row(
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(8.dp)
                     ){
                         Text(
                             text = toDoData.text,
@@ -155,12 +213,13 @@ fun ToDo(
                         Checkbox(
                             checked = toDoData.done,
                             onCheckedChange = {
-                                    checked -> onToggle(toDoData.key, checked)
+                                checked -> onToggle(toDoData.key, checked)
                             }
                         )
                         Button(
                             onClick = {
                                 isEditing = true
+                                //onEdit(toDoData.key, "123")
                             }/*onToggle(
                     key = 1, true
                 )*/
@@ -171,7 +230,9 @@ fun ToDo(
                         }
                         Spacer(Modifier.size(4.dp))
                         Button(
-                            onClick = {}/*onDelete(
+                            onClick = {
+                                onDelete(toDoData.key)
+                            }/*onDelete(
 
                 )*/
                         ) {
@@ -183,16 +244,32 @@ fun ToDo(
                 }
                 true -> {
                     Row(
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(8.dp)
                     ){
+                        var newText by remember {
+                            mutableStateOf(toDoData.text)
+                        }
+
+//                        var (newText, setNewText) = remember {
+//                            mutableStateOf(toDoData.text)
+//                        }
+
                         OutlinedTextField(
-                            value = toDoData.text,
-                            onValueChange = {},
+                            value = newText,
+                            onValueChange = //setNewText
+                            {
+                                newText = it
+
+                            },
                             modifier = Modifier.weight(1f)
                         )
                         Spacer(Modifier.size(4.dp))
                         Button(
-                            onClick = {}
+                            onClick = {
+                                onEdit(toDoData.key, newText)
+                                isEditing = false
+                            }
                         ){
                             Text("완료")
                         }
@@ -216,6 +293,7 @@ fun ToDoPreview() {
     }
 }
 
+//immutable
 data class ToDoData(
     val key: Int,
     val text: String,

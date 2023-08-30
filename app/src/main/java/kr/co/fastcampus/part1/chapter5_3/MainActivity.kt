@@ -74,27 +74,42 @@ class ToDoViewModel : ViewModel() {
      * observeAsState는 DisposableEffect를 만들어서 observe를 한다..
      * */
 
-    val toDoList = mutableStateListOf<ToDoData>()
+
+
+    //val toDoList = mutableStateListOf<ToDoData>()
+    private val _rawToDoList = mutableListOf<ToDoData>()
+    private val _toDoList = MutableLiveData<List<ToDoData>>(_rawToDoList)
+
+    val toDoList : LiveData<List<ToDoData>> = _toDoList
+
+    /**
+     * mutableStateListOf -> 추가, 삭제, 갱신 -> UI가 갱신된다. 그러나 각 항목의 필드가 바뀌었을때는 갱신이 안된다.
+     * 하지만 LiveData<List<X>>.observeAsState() -> List가 통째로 다른 List로 바뀌었을때만 state가 갱신된다
+     */
 
     val onSubmit: (String) -> Unit = {
-        val key = (toDoList.lastOrNull()?.key ?: 0) + 1
-        toDoList.add(ToDoData(key, it))
+        val key = (_rawToDoList.lastOrNull()?.key ?: 0) + 1
+        _rawToDoList.add(ToDoData(key, it))
+        _toDoList.value = ArrayList(_rawToDoList)
         _text.value = ""
     }
 
     val onEdit: (Int, String) -> Unit = { key, newText ->
-        val i = toDoList.indexOfFirst { it.key == key }
-        toDoList[i] = toDoList[i].copy(text = newText)
+        val i = _rawToDoList.indexOfFirst { it.key == key }
+        _rawToDoList[i] = _rawToDoList[i].copy(text = newText)
+        _toDoList.value = ArrayList(_rawToDoList)
     }
 
     val onToggle: (Int, Boolean) -> Unit = { key, checked ->
-        val i = toDoList.indexOfFirst { it.key == key }
-        toDoList[i] = toDoList[i].copy(done = checked)
+        val i = _rawToDoList.indexOfFirst { it.key == key }
+        _rawToDoList[i] = _rawToDoList[i].copy(done = checked)
+        _toDoList.value = ArrayList(_rawToDoList)
     }
 
     val onDelete: (Int) -> Unit = { key ->
-        val i = toDoList.indexOfFirst { it.key == key }
-        toDoList.removeAt(i)
+        val i = _rawToDoList.indexOfFirst { it.key == key }
+        _rawToDoList.removeAt(i)
+        _toDoList.value = ArrayList(_rawToDoList)
     }
 }
 
@@ -150,9 +165,7 @@ fun TopLevel(
                  */
                     //viewModel.text.value = it
 
-                /**
-                 * mutableStateListOf -> 추가, 삭제, 갱신 -> UI가 갱신된다. 그러나 각 항목의 필드가 바뀌었을때는 갱신이 안된다.
-                 */
+
                                                                                viewModel.setText
                                                                                //viewModel.setText(it)
                 , onSubmit = viewModel.onSubmit
@@ -160,8 +173,16 @@ fun TopLevel(
 //                    viewModel.text.value = it
 //                }, onSubmit = viewModel.onSubmit
             )
+
+            val items = viewModel.toDoList.observeAsState(emptyList<ToDoData>()).value
             LazyColumn {
-                items(items = viewModel.toDoList, key = { it.key }) { toDoData ->
+                /**
+                 * @Composable invocations can only happen from the context of a @Composable function
+                 * Composable 함수내에서만 Composable을 사용할 수 있다.
+                 * LazyColumn의 items에서 items parameter는 composable이 아니다.
+                 */
+
+                items(items = items, key = { it.key }) { toDoData ->
                     ToDo(
                         toDoData = toDoData,
                         onEdit = viewModel.onEdit,

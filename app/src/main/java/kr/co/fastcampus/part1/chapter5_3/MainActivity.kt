@@ -64,7 +64,10 @@ class ToDoViewModel : ViewModel() {
         val key = (_rawToDoList.lastOrNull()?.key ?: 0) + 1
         _rawToDoList.add(ToDoData(key, it))
 //        _toDoList.value = ArrayList(_rawToDoList)
-        _toDoList.value = _rawToDoList.toMutableList()
+//        _toDoList.value = _rawToDoList.toMutableList()
+        _toDoList.value = mutableListOf<ToDoData>().also {
+            it.addAll(_rawToDoList)
+        }
         _text.value = ""
     }
 
@@ -72,21 +75,30 @@ class ToDoViewModel : ViewModel() {
         val i = _rawToDoList.indexOfFirst { it.key == key }
         _rawToDoList[i] = _rawToDoList[i].copy(text = newText)
 //        _toDoList.value = ArrayList(_rawToDoList)
-        _toDoList.value = _rawToDoList.toMutableList()
+        //_toDoList.value = _rawToDoList.toMutableList()
+        _toDoList.value = mutableListOf<ToDoData>().also {
+            it.addAll(_rawToDoList)
+        }
     }
 
     val onToggle: (Int, Boolean) -> Unit = { key, checked ->
         val i = _rawToDoList.indexOfFirst { it.key == key }
         _rawToDoList[i] = _rawToDoList[i].copy(done = checked)
 //        _toDoList.value = ArrayList(_rawToDoList)
-        _toDoList.value = _rawToDoList.toMutableList()
+        //_toDoList.value = _rawToDoList.toMutableList()
+        _toDoList.value = mutableListOf<ToDoData>().also {
+            it.addAll(_rawToDoList)
+        }
     }
 
     val onDelete: (Int) -> Unit = { key ->
         val i = _rawToDoList.indexOfFirst { it.key == key }
         _rawToDoList.removeAt(i)
 //        _toDoList.value = ArrayList(_rawToDoList)
-        _toDoList.value = _rawToDoList.toMutableList()
+        //_toDoList.value = _rawToDoList.toMutableList()
+        _toDoList.value = mutableListOf<ToDoData>().also {
+            it.addAll(_rawToDoList)
+        }
     }
 }
 

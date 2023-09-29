@@ -67,6 +67,7 @@ class ToDoViewModel : ViewModel() {
 //        _toDoList.value = _rawToDoList.toMutableList()
         _toDoList.value = mutableListOf<ToDoData>().also {
             it.addAll(_rawToDoList)
+            // shallow copy가 발생 할 수 있다.
         }
         _text.value = ""
     }

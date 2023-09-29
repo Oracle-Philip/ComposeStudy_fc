@@ -35,6 +35,14 @@ class MainActivity : ComponentActivity() {
 
 // 단계 4: `compositionLocalOf`에 `8.dp`를 넣어 `LocalElevation`을 할당합니다.
 
+/**
+ * CompositionLocal은 암시적인 데이터라 볼 수 있다.
+ * 기존에는 명시적으로 parameter를 통해 데이터를 넘겨줄 수 있었는데
+ * parameter에는 없지만 데이터가 넘어갈 수 있게 해주는게
+ * CompositionLocal이다.
+ */
+val LocalElevation = compositionLocalOf { 8.dp }
+
 @Composable
 fun Greeting() {
     // 단계 1: `CompositionLocalProvider`을 이용하면 특정 블록에 암시적인 값을 설정할 수 있습니다.
@@ -52,21 +60,54 @@ fun Greeting() {
 
     // 단계 6: LocalElevation의 값을 `CompositionLocalProvider`로
     // 바꾸어 봅시다.
-    Card(
-        modifier = Modifier.padding(8.dp)
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp),
+    CompositionLocalProvider(LocalElevation provides 12.dp) {
+        Card(
+            modifier = Modifier.padding(8.dp),
+            elevation = LocalElevation.current
         ) {
-            Text("안녕하세요. 패스트캠퍼스")
-            Text("스안녕하세요. 패스트캠퍼")
-            Text("퍼스안녕하세요. 패스트캠")
-            Text("캠퍼스안녕하세요. 패스트")
-            Text("트캠퍼스안녕하세요. 패스")
-            Text("스트캠퍼스안녕하세요. 패")
-            Text("패스트캠퍼스안녕하세요.")
-            // 단계 3: `LocalContext.current`의 `resources`를 출력해보세요.
+            CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.disabled){
+                /**
+                 * 후행람다를 통해 LocalContentAlpha 값을 마치
+                 * ContentAlpha.disabled처럼 사용 할 수 있다.
+                 */
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                ) {
+                    Text("안녕하세요. 패스트캠퍼스")
+                    Text("${LocalContentColor.current}")
+                    Text("${LocalContentAlpha.current}")
+                    CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.high) {
+                        //FaseCampus()
+                        Text("스안녕하세요. 패스트캠퍼")
+                        CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
+                            Text("퍼스안녕하세요. 패스트캠")
+                        }
+                        CompositionLocalProvider(LocalContentColor provides Color.Magenta) {
+                            Text("캠퍼스안녕하세요. 패스트")
+                            Text("트캠퍼스안녕하세요. 패스")
+                            Text("${LocalContentColor.current}")
+                            Text("${LocalContentAlpha.current}")
+                        }
+                    }
+                    Text("스트캠퍼스안녕하세요. 패")
+                    Text("패스트캠퍼스안녕하세요.")
+                    Button(onClick = {}){}
+                    // 단계 3: `LocalContext.current`의 `resources`를 출력해보세요.
+                }
+            }
         }
+    }
+}
+
+@Composable
+private fun FaseCampus(){
+    Text("스안녕하세요. 패스트캠퍼")
+    CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
+        Text("퍼스안녕하세요. 패스트캠")
+    }
+    CompositionLocalProvider(LocalContentColor provides Color.Magenta) {
+        Text("캠퍼스안녕하세요. 패스트")
+        Text("트캠퍼스안녕하세요. 패스")
     }
 }
 

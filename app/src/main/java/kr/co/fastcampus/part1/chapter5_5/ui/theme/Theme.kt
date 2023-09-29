@@ -18,9 +18,22 @@ private val DarkColorPalette = darkColors(
 
 // 단계 3: `primary`와 `onPrimary` 값도 바꾸어봅시다.
 private val LightColorPalette = lightColors(
-    primary = Purple500,
+    //primary = Purple500,
     primaryVariant = Purple700,
     secondary = Teal200,
+    surface = Color.Black,
+    onSurface = Color.White, //onSuface -> 전경색상
+
+    /**
+     * xxx와 onXXX가 짝을 이루게 되어 있다.
+     */
+
+    /**
+     * primary -> 제일 중요한 컨텐츠 의미
+     * 예) 기본버튼에 경우 primary 색상으로 만들어져 있음
+     */
+    primary = Color.Magenta,
+    onPrimary = Color.Cyan
 
 
     /* Other default colors to override
@@ -35,11 +48,11 @@ private val LightColorPalette = lightColors(
 
 @Composable
 fun ThemeTestTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
-    val colors = if (darkTheme) {
+    val colors = /*if (darkTheme) {
         DarkColorPalette
     } else {
         LightColorPalette
-    }
+    }*/ LightColorPalette
 
     MaterialTheme(
         colors = colors,

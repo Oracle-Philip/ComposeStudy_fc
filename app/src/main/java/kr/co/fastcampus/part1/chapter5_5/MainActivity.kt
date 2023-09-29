@@ -19,6 +19,10 @@ class MainActivity : ComponentActivity() {
         setContent {
             // 단계 1: ThemeTestTheme으로 이동합니다.
             ThemeTestTheme {
+                /**
+                 * Surface의 배경이 Surface 값이 된다.
+                 * onSurface는 Surface 위에 올라가는 TextColor 즉, 전경색상 이다.
+                 */
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background

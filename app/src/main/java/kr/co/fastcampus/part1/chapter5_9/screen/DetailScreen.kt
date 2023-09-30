@@ -19,7 +19,7 @@ import kr.co.fastcampus.part1.chapter5_9.viewmodel.PokemonViewModel
 fun DetailScreen(
     pokemonId: Int,
     onUpButtonClick: () -> Unit,
-    viewModel: PokemonViewModel
+    viewModel: PokemonViewModel = hiltViewModel()
 ) {
     viewModel.getPokemon(pokemonId)
 

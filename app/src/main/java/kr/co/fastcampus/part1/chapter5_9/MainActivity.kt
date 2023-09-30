@@ -66,9 +66,17 @@ fun TopLevel(
         // 리스트로 전달해야 한다.
         composable(
             "Detail/{pokemonId}",
+            arguments = listOf(
+                navArgument("pokemonId"){
+                    /**
+                     * 후행람다로 Type 적용 할 수 있다.
+                     */
+                    type = NavType.IntType
+                }
+            )
         ) {
             // 단계 4: `pokemonId`를 `Int`값으로 가져오자. (`arguments?.getInt`를 이용)
-            val pokemonId = 0
+            val pokemonId = it.arguments?.getInt("pokemonId") as Int
             DetailScreen(
                 pokemonId = pokemonId,
                 onUpButtonClick = {

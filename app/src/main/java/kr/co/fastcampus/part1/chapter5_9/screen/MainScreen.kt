@@ -16,11 +16,29 @@ import androidx.paging.compose.items
 import kr.co.fastcampus.part1.chapter5_9.viewmodel.PokemonViewModel
 
 // 단계 1: viewModel을 제대로 설정하자. `hiltViewModel()`를 사용한다.
+/**
+ * navigation을 사용하면 hiltViewModel()을 사용한다.
+ */
+
+/**
+ * fun MainScreen(
+onPokemonClick: (String) -> Unit,와 같이 click했을때 처리를
+ 밖으로 위임하게 했다.
+ */
 @Composable
 fun MainScreen(
     onPokemonClick: (String) -> Unit,
-    viewModel: PokemonViewModel
+    viewModel: PokemonViewModel = hiltViewModel()
 ) {
+    /**
+     * .collectAsLazyPagingItems()를 사용하면
+     * LazyColumn나 LazyRow에서 사용가능하다.
+     *
+     * implementation "androidx.paging:paging-compose:1.0.0-alpha15" 의존성을 추가한 이유는
+     * val pokemonList: Flow<PagingData<Response.Result>> = getPokemons().cachedIn(viewModelScope)에서
+     * compose가 사용할 수 있게 .collectAsLazyPagingItems()를 사용하기 위해서이다.
+     *
+     */
     val items = viewModel.pokemonList.collectAsLazyPagingItems()
     LazyColumn {
         items(items, key = { it.url }) {

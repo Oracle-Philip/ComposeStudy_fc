@@ -8,6 +8,9 @@ interface PokeAPI {
     @GET("pokemon/")
     suspend fun getPokemons(): Response
 
+    /**
+     * https://pokeapi.co/api/v2/pokemon/?offset=20&limit=20
+     */
     @GET("pokemon/")
     suspend fun getPokemons(
         @Query("offset") offset: Int,
